@@ -1,23 +1,315 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {},
-  "variables": {},
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
+    "publicIpSku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "metadata": {
+        "description": "SKU for the public IP address."
+      }
+    },
+    "publicIPAllocationMethod": {
+      "type": "string",
+      "defaultValue": "Static",
+      "metadata": {
+        "description": "Allocation method for the public IP address."
+      }
+    },
+    "dnsLabelPrefix": {
+      "type": "string",
+      "defaultValue": "tusredev001dns",
+      "metadata": {
+        "description": "DNS label prefix for the public IP address."
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_DS1_v2",
+      "metadata": {
+        "description": "Size of the virtual machine."
+      }
+    },
+    "vmName": {
+      "type": "string",
+      "defaultValue": "tusredev001vm",
+      "metadata": {
+        "description": "Name of the virtual machine."
+      }
+    },
+    "OSVersion": {
+      "type": "string",
+      "defaultValue": "2019-Datacenter",
+      "metadata": {
+        "description": "Version of the operating system."
+      }
+    },
+    "tanoj": {
+      "type": "string",
+      "defaultValue": "tanojadmin",
+      "metadata": {
+        "description": "Admin username for the virtual machine."
+      }
+    },
+    "adminPassword": {
+      "type": "secureString",
+      "defaultValue": "12345678Tu!#",
+      "metadata": {
+        "description": "Admin password for the virtual machine."
+      }
+    },
+    "securityType": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "TrustedLaunch"
+      ],
+      "metadata": {
+        "description": "Specifies the security type of the VM. Use 'TrustedLaunch' for enhanced security features."
+      }
+    },
+    "publicIpName": {
+      "type": "string",
+      "defaultValue": "tusredev001publicip",
+      "metadata": {
+        "description": "Name of the public IP address resource."
+      }
+    }
+  },
+  "variables": {
+    "addressPrefix": "10.0.0.0/16",
+    "subnetName": "default",
+    "subnetPrefix": "10.0.0.0/24",
+    "networkSecurityGroupName": "tusredev001nsg",
+    "virtualNetworkName": "tusredev001vnet",
+    "nicName": "tusredev001nic",
+    "storageAccountName": "tusredev001storage",
+    "publicIpName": "tusredev001publicip",
+    "extensionPublisher": "Microsoft.Azure.Security",
+    "extensionName": "AzureDefender",
+    "extensionVersion": "1.0",
+    "maaEndpoint": "https://maa.endpoint",
+    "maaTenantName": "tenantName",
+    "securityProfileJson": {
+      "uefiSettings": {
+        "secureBootEnabled": true,
+        "vTpmEnabled": true
+      }
+    }
+  },
   "resources": [
+      {
+        "name": "tustgsre02331",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2023-05-01",
+        "tags": {
+          "displayName": "tustgsre02331",
+          "resourceGroupReference": "[resourceGroup().name]"
+        },
+        "location": "[resourceGroup().location]",
+        "kind": "StorageV2",
+        "sku": {
+          "name": "Premium_LRS",
+          "tier": "Premium"
+        }
+    },
     {
-      "name": "tustgsre02331",
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2023-05-01",
-      "tags": {
-        "displayName": "tustgsre02331"
-      },
+      "name": "tusredev001storage",
       "location": "[resourceGroup().location]",
-      "kind": "StorageV2",
       "sku": {
-        "name": "Premium_LRS",
-        "tier": "Premium"
+        "name": "Standard_LRS"
+      },
+      "kind": "Storage"
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2024-03-01",
+      "name": "tusredev001publicip",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('publicIpSku')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIPAllocationMethod')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+        }
       }
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2024-03-01",
+      "name": "tusredev001nsg",
+      "location": "[parameters('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "default-allow-3389",
+            "properties": {
+              "priority": 1000,
+              "access": "Allow",
+              "direction": "Inbound",
+              "destinationPortRange": "3389",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2024-03-01",
+      "name": "tusredev001vnet",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('addressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnetName')]",
+            "properties": {
+              "addressPrefix": "[variables('subnetPrefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+              }
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2024-03-01",
+      "name": "tusredev001nic",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]"
+              },
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+              }
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2024-07-01",
+      "name": "tusredev001vm",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('vmName')]",
+          "adminUsername": "[parameters('tanoj')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "[parameters('OSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "StandardSSD_LRS"
+            }
+          },
+          "dataDisks": [
+            {
+              "diskSizeGB": 1023,
+              "lun": 0,
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2022-05-01').primaryEndpoints.blob]"
+          }
+        },
+        "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+      ]
+    },
+    {
+      "condition": "[and(equals(parameters('securityType'), 'TrustedLaunch'), and(equals(variables('securityProfileJson').uefiSettings.secureBootEnabled, true()), equals(variables('securityProfileJson').uefiSettings.vTpmEnabled, true())))]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2024-07-01",
+      "name": "tusredev001vm/tusredev001extension",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publisher": "[variables('extensionPublisher')]",
+        "type": "[variables('extensionName')]",
+        "typeHandlerVersion": "[variables('extensionVersion')]",
+        "autoUpgradeMinorVersion": true,
+        "enableAutomaticUpgrade": true,
+        "settings": {
+          "AttestationConfig": {
+            "MaaSettings": {
+              "maaEndpoint": "[variables('maaEndpoint')]",
+              "maaTenantName": "[variables('maaTenantName')]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+      ]
     }
   ],
   "outputs": {}
 }
+// Example of creating a resouce group (Azure CLI):
+// az group create --name tusre-dev-001 --location "Australia East"
+
+// When deploying, specify the resource group name as 'tusre-dev-001' using Azure CLI:
+// az deployment group create --resource-group tusre-dev-001 --template-file template.json
+
+//New-AzResourceGroupDeployment -Name myfirsttemplate -ResourceGroupName tusre-dev-001 -TemplateFile .\template.json
+
