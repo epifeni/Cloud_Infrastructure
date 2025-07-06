@@ -305,11 +305,5 @@
   ],
   "outputs": {}
 }
-// Example of creating a resouce group (Azure CLI):
-// az group create --name tusre-dev-001 --location "Australia East"
 
-// When deploying, specify the resource group name as 'tusre-dev-001' using Azure CLI:
-// az deployment group create --resource-group tusre-dev-001 --template-file template.json
-
-//New-AzResourceGroupDeployment -Name myfirsttemplate -ResourceGroupName tusre-dev-001 -TemplateFile .\template.json
 
