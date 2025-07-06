@@ -1,7 +1,11 @@
 {
+  // ARM template schema and version
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
+
+  // Parameters for deployment customization
   "parameters": {
+    // Location for all resources
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -9,6 +13,7 @@
         "description": "Location for all resources."
       }
     },
+    // Public IP SKU
     "publicIpSku": {
       "type": "string",
       "defaultValue": "Standard",
@@ -16,6 +21,7 @@
         "description": "SKU for the public IP address."
       }
     },
+    // Public IP allocation method
     "publicIPAllocationMethod": {
       "type": "string",
       "defaultValue": "Static",
@@ -23,6 +29,7 @@
         "description": "Allocation method for the public IP address."
       }
     },
+    // DNS label prefix for the public IP
     "dnsLabelPrefix": {
       "type": "string",
       "defaultValue": "tusredev001dns",
@@ -30,6 +37,7 @@
         "description": "DNS label prefix for the public IP address."
       }
     },
+    // VM size
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_DS1_v2",
@@ -37,6 +45,7 @@
         "description": "Size of the virtual machine."
       }
     },
+    // VM name
     "vmName": {
       "type": "string",
       "defaultValue": "tusredev001vm",
@@ -44,6 +53,7 @@
         "description": "Name of the virtual machine."
       }
     },
+    // OS version for the VM
     "OSVersion": {
       "type": "string",
       "defaultValue": "2019-Datacenter",
@@ -51,6 +61,7 @@
         "description": "Version of the operating system."
       }
     },
+    // Admin username
     "tanoj": {
       "type": "string",
       "defaultValue": "tanojadmin",
@@ -58,6 +69,7 @@
         "description": "Admin username for the virtual machine."
       }
     },
+    // Admin password (secure)
     "adminPassword": {
       "type": "secureString",
       "defaultValue": "12345678Tu!#",
@@ -65,6 +77,7 @@
         "description": "Admin password for the virtual machine."
       }
     },
+    // Security type for VM
     "securityType": {
       "type": "string",
       "defaultValue": "Standard",
@@ -76,6 +89,7 @@
         "description": "Specifies the security type of the VM. Use 'TrustedLaunch' for enhanced security features."
       }
     },
+    // Public IP resource name
     "publicIpName": {
       "type": "string",
       "defaultValue": "tusredev001publicip",
@@ -84,6 +98,8 @@
       }
     }
   },
+
+  // Variables for resource names and settings
   "variables": {
     "addressPrefix": "10.0.0.0/16",
     "subnetName": "default",
@@ -93,11 +109,13 @@
     "nicName": "tusredev001nic",
     "storageAccountName": "tusredev001storage",
     "publicIpName": "tusredev001publicip",
+    // Extension settings for Trusted Launch
     "extensionPublisher": "Microsoft.Azure.Security",
     "extensionName": "AzureDefender",
     "extensionVersion": "1.0",
     "maaEndpoint": "https://maa.endpoint",
     "maaTenantName": "tenantName",
+    // Security profile for Trusted Launch
     "securityProfileJson": {
       "uefiSettings": {
         "secureBootEnabled": true,
@@ -105,22 +123,26 @@
       }
     }
   },
+
+  // Resource definitions
   "resources": [
-      {
-        "name": "tustgsre02331",
-        "type": "Microsoft.Storage/storageAccounts",
-        "apiVersion": "2023-05-01",
-        "tags": {
-          "displayName": "tustgsre02331",
-          "resourceGroupReference": "[resourceGroup().name]"
-        },
-        "location": "[resourceGroup().location]",
-        "kind": "StorageV2",
-        "sku": {
-          "name": "Premium_LRS",
-          "tier": "Premium"
-        }
+    // Premium Storage Account
+    {
+      "name": "tustgsre02331",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-05-01",
+      "tags": {
+        "displayName": "tustgsre02331",
+        "resourceGroupReference": "[resourceGroup().name]"
+      },
+      "location": "[resourceGroup().location]",
+      "kind": "StorageV2",
+      "sku": {
+        "name": "Premium_LRS",
+        "tier": "Premium"
+      }
     },
+    // Standard Storage Account
     {
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2023-05-01",
@@ -131,6 +153,7 @@
       },
       "kind": "Storage"
     },
+    // Public IP Address
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2024-03-01",
@@ -146,6 +169,7 @@
         }
       }
     },
+    // Network Security Group with RDP rule
     {
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2024-03-01",
@@ -169,6 +193,7 @@
         ]
       }
     },
+    // Virtual Network with subnet and NSG association
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2024-03-01",
@@ -196,6 +221,7 @@
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
       ]
     },
+    // Network Interface Card
     {
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2024-03-01",
@@ -222,6 +248,7 @@
         "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
       ]
     },
+    // Virtual Machine with optional Trusted Launch security profile
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2024-07-01",
@@ -270,6 +297,7 @@
             "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2022-05-01').primaryEndpoints.blob]"
           }
         },
+        // Conditional security profile for Trusted Launch
         "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
       },
       "dependsOn": [
@@ -277,6 +305,7 @@
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ]
     },
+    // VM Extension for Trusted Launch attestation (conditional)
     {
       "condition": "[and(equals(parameters('securityType'), 'TrustedLaunch'), and(equals(variables('securityProfileJson').uefiSettings.secureBootEnabled, true()), equals(variables('securityProfileJson').uefiSettings.vTpmEnabled, true())))]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
@@ -303,6 +332,8 @@
       ]
     }
   ],
+
+  // Outputs (none defined)
   "outputs": {}
 }
 
