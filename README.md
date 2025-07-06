@@ -1,4 +1,4 @@
-*My notes for Git*
+**My notes for Git**
 git init  
 git add -A  
 git commit -m 'Added my project'  
@@ -8,7 +8,7 @@ git push -u -f origin main
 git fetch  
 git pull  
 
-* My notes on ARM Templates *   
+**My notes on ARM Templates**   
 Example of creating a resouce group (Azure CLI):  
 az group create --name tusre-dev-001 --location "Australia East"  
 
