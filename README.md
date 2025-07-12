@@ -1,4 +1,4 @@
-**My notes for Git**
+**My notes for Git**  
 git init  
 git add -A  
 git commit -m 'Added my project'  
@@ -17,4 +17,13 @@ When deploying, specify the resource group name as 'tusre-dev-001' using Azure C
 az deployment group create --resource-group tusre-dev-001 --template-file template.json  
 
 New-AzResourceGroupDeployment -Name myfirsttemplate -ResourceGroupName tusre-dev-001 -TemplateFile .\template.json  
+
+Connecting to Az Account: 
+connect-AzAccount -Tenant 63f6c050-c3dc-4b5c-8be3-a3f638941f12 -Subscription eb2746d5-a73e-4c92-87cb-9cfa32c0aeff 
+
+Get-AzResourceGroup  
+
+
+
+
 
