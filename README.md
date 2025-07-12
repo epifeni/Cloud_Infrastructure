@@ -23,7 +23,9 @@ connect-AzAccount -Tenant 63f6c050-c3dc-4b5c-8be3-a3f638941f12 -Subscription eb2
 
 Get-AzResourceGroup  
 
-
-
+--> Pushing updates to README.md: 
+git add README.md 
+git commit -m "Update README.md" 
+git push 
 
 
