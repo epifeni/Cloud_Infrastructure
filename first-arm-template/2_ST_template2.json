@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+
+    // Working with ARM template parameters
+    // Resource Template Documentation: https://learn.microsoft.com/en-us/azure/templates/microsoft.storage/storageaccounts?tabs=json&pivots=deployment-language-bicep
+
+    "parameters": {
+        "tustgName": {
+            "type": "string",
+            //"minLength": 6, // Minimum length for a storage account name is 6 characters
+            "maxLength": 24,
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('tustgName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-05-01",
+            "tags": {
+                "displayName": "[parameters('tustgName')]"
+            },
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            }
+        }
+    ],
+    "outputs": {}
+}
+
+// NOTE: This template creates a storage account with the name provided in the 'tustgName' parameter.
+// There can be different types of parameters in an ARM template, such as string, secureString, int, bool, object, secureObject, and array.
+// - variable types, such as 'string', are used to define the expected input for parameters, ensuring that the correct data type is provided during deployment.
+// - string parameters are commonly used for resource names, locations, and other identifiers that need to be unique or descriptive.
+// - secureString parameters can be used for sensitive information, such as passwords or connection strings, to ensure that they are not exposed in the template or deployment logs.
+// integers can be used for numeric values, such as port numbers or counts, where a specific range or value is required.
+// - boolean parameters can be used to enable or disable features, such as enabling encryption or logging, allowing for more flexible deployments based on user input.
+// - object parameters can be used to group related properties together, such as configuration settings for a resource, making it easier to manage complex deployments.
+// - secureObject parameters can be used for sensitive configurations, ensuring that sensitive information is handled securely during deployment.
+// - array parameters can be used to define lists of values, such as tags or resource IDs, allowing for more dynamic and flexible deployments.
+// - The template can be extended to include additional resources, such as virtual networks, subnets, or other Azure services, to create a more comprehensive infrastructure setup
