@@ -18,8 +18,6 @@ az deployment group create --resource-group tusre-dev-001 --template-file templa
 
 New-AzResourceGroupDeployment -Name myfirsttemplate -ResourceGroupName tusre-dev-001 -TemplateFile .\template.json  
 
-Connecting to Az Account: 
-connect-AzAccount -Tenant 63f6c050-c3dc-4b5c-8be3-a3f638941f12 -Subscription eb2746d5-a73e-4c92-87cb-9cfa32c0aeff 
 
 Get-AzResourceGroup  
 
@@ -27,5 +25,14 @@ Get-AzResourceGroup
 git add README.md 
 git commit -m "Update README.md" 
 git push 
+
+--> Using Powershell  
+Crating new resource group: New-AzResourceGroup -Name RGS-PowerShell -Locatio "Australia East" 
+Connecting to Az Account (Student Account): 
+connect-AzAccount -Tenant 63f6c050-c3dc-4b5c-8be3-a3f638941f12 -Subscription eb2746d5-a73e-4c92-87cb-9cfa32c0aeff 
+
+--> Using Cli 
+Creating a resource group 
+az group create --name RSG-CLI --loation "Australia East" 
 
 
