@@ -36,3 +36,4 @@ Creating a resource group
 az group create --name RSG-CLI --loation "Australia East" 
 
 
+
