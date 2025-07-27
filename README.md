@@ -39,6 +39,7 @@ Creating a new user:
 az ad user create --display-name CLICreatedUser --password myComplexPassword1234 --user-principal-name tanoj2016.123@Tanoj2021outlook.onmicrosoft.com 
 
 Managing Premium Licencing Features: 
+Q. how many licences do you need for the privilege identity management and access reviews: Only need P2 licences for administarators or users that are actively using those tools (i.e. approvers) - everyone else can use a free account
 
 <img width="782" height="398" alt="image" src="https://github.com/user-attachments/assets/7905f92a-3c1a-4576-b3de-73626f35a9f0" /> 
 
