@@ -54,7 +54,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_odw",
+						"referenceName": "SourceDataset_GlobalEducation",
 						"type": "DatasetReference"
 					}
 				],
