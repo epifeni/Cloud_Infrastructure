@@ -1,0 +1,9 @@
+{
+	"name": "globaleducationdata",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "782bc674-b04b-49b8-a6d2-6975e88f8251",
+		"tenantId": "63f6c050-c3dc-4b5c-8be3-a3f638941f12"
+	}
+}

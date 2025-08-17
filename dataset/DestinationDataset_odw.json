@@ -1,0 +1,24 @@
+{
+	"name": "DestinationDataset_odw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_PrimarySchool",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "children_in_primary_school.csv",
+				"container": "globaleducationdatablobsink"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

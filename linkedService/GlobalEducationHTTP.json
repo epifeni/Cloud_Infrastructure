@@ -1,0 +1,13 @@
+{
+	"name": "GlobalEducationHTTP",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://ourworldindata.org/grapher/primary-enrollment-selected-countries.csv?v=1&csvType=full&useColumnShortNames=true",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
