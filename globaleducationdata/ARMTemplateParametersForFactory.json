@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "globaleducationdata"
+		},
+		"AzureBlobStorage_PrimarySchool_connectionString": {
+			"value": ""
+		},
+		"primary_enrollment_selected_countries_properties_typeProperties_url": {
+			"value": "https://ourworldindata.org/grapher/primary-enrollment-selected-countries.csv?v=1&csvType=full&useColumnShortNames=true"
+		}
+	}
+}
