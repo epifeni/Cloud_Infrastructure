@@ -1,0 +1,11 @@
+{
+	"name": "ls_st_globaleducationdata_stage_yt",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"serviceEndpoint": "https://globaleducationdata.blob.core.windows.net/",
+			"accountKind": "StorageV2"
+		}
+	}
+}
