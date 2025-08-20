@@ -1,0 +1,18 @@
+{
+	"name": "ds_children_in_primary_school_sink_binary_yt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_st_globaleducationdata_stage_yt",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "children_in_primary_school_copied_data.txt",
+				"container": "globaleducationdatablobsink"
+			}
+		}
+	}
+}

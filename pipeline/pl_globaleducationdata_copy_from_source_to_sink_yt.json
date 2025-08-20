@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "pl_globaleducationdata_copy_from_source_to_sink_yt",
 	"properties": {
 		"activities": [
 			{
@@ -25,11 +25,23 @@
 							"type": "BinaryReadSettings"
 						}
 					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
 						"referenceName": "ds_children_in_primary_school_source_binary_yt",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_children_in_primary_school_sink_binary_yt",
 						"type": "DatasetReference"
 					}
 				]
