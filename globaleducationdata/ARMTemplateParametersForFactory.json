@@ -10,6 +10,9 @@
 		},
 		"primary_enrollment_selected_countries_properties_typeProperties_url": {
 			"value": "https://ourworldindata.org/grapher/primary-enrollment-selected-countries.csv?v=1&csvType=full&useColumnShortNames=true"
+		},
+		"ls_st_globaleducationdata_stage_yt_properties_typeProperties_serviceEndpoint": {
+			"value": "https://globaleducationdata.blob.core.windows.net/"
 		}
 	}
 }
